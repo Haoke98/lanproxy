@@ -30,6 +30,9 @@
                     return d.packetSize + ' bytes';
                 }}
                 ,{field: 'requestInfo', title: '请求信息'}
+                ,{field: 'action', title: '操作', width: '8%', templet: function(d){
+                    return '<button class="layui-btn layui-btn-xs" lay-event="viewDetails">详情</button>';
+                }}
             ]]
             ,response: {
                 statusCode: 20000
@@ -60,5 +63,90 @@
                 scrollPos: true
             });
         }, 10000);
+
+        // 监听表格工具条
+        table.on('tool(logTable)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'viewDetails'){
+                layer.open({
+                    type: 1,
+                    title: '请求详情',
+                    area: ['800px', '600px'],
+                    content: detailsModalTemplate,
+                    success: function(layero, index){
+                        // Format the hex content with line numbers and grouping
+                        var formattedHex = '';
+                        var hexContent = data.hexContent || '';
+                        var hexBytes = hexContent.split(' ');
+                        
+                        for(var i = 0; i < hexBytes.length; i += 16) {
+                            var line = hexBytes.slice(i, i + 16);
+                            formattedHex += line.join(' ') + '\n';
+                        }
+                        
+                        // Format ASCII content with line breaks matching hex view
+                        var asciiContent = data.asciiContent || '';
+                        var formattedAscii = '';
+                        for(var i = 0; i < asciiContent.length; i += 16) {
+                            formattedAscii += asciiContent.substr(i, 16) + '\n';
+                        }
+                        
+                        var $modal = $(layero);
+                        $modal.find('.log-hex .content').text(formattedHex || '无数据');
+                        $modal.find('.log-ascii .content').text(formattedAscii || '无数据');
+                    }
+                });
+            }
+        });
     });
+
+    // 详情弹窗模板
+    var detailsModalTemplate = [
+        '<div class="log-details-modal">',
+            '<div class="log-details-container">',
+                '<div class="log-hex">',
+                    '<div class="title">HEX格式</div>',
+                    '<div class="content"></div>',
+                '</div>',
+                '<div class="log-ascii">',
+                    '<div class="title">ASCII格式</div>',
+                    '<div class="content"></div>',
+                '</div>',
+            '</div>',
+        '</div>'
+    ].join('');
 </script>
+
+<style>
+.log-details-modal {
+    padding: 15px;
+}
+.log-details-container {
+    display: flex;
+    height: 100%;
+}
+.log-hex, .log-ascii {
+    flex: 1;
+    padding: 10px;
+}
+.log-hex .title, .log-ascii .title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.log-hex .content, .log-ascii .content {
+    white-space: pre;
+    word-break: break-all;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    font-family: "Courier New", Courier, monospace;
+    background: #f8f8f8;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.log-hex .content {
+    letter-spacing: 1px;
+}
+</style>
