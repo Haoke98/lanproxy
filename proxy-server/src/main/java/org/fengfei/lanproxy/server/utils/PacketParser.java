@@ -43,6 +43,45 @@ public class PacketParser {
             return attributes;
         }
 
+        public String getDetailedInfo() {
+            StringBuilder sb = new StringBuilder();
+
+            if ("SSH".equals(protocol)) {
+                sb.append("Type: ").append(attributes.get("messageType"));
+                if (attributes.containsKey("version")) {
+                    sb.append(", Version: ").append(attributes.get("version"));
+                }
+                if (attributes.containsKey("software")) {
+                    sb.append(", Client: ").append(attributes.get("software"));
+                }
+            } else if ("PostgreSQL".equals(protocol)) {
+                sb.append("Type: ").append(attributes.get("messageType"));
+                if ("StartupMessage".equals(attributes.get("messageType"))) {
+                    sb.append(", Version: ").append(attributes.get("protocolVersion"));
+                    @SuppressWarnings("unchecked")
+                    Map<String, String> params = (Map<String, String>) attributes.get("parameters");
+                    if (params != null) {
+                        sb.append("\nParameters:");
+                        params.forEach((k, v) -> sb.append("\n  ").append(k).append(": ").append(v));
+                    }
+                }
+            } else if (protocol.startsWith("HTTP")) {
+                sb.append(attributes.get("method")).append(" ")
+                        .append(attributes.get("path"));
+                if (headers.containsKey("User-Agent")) {
+                    sb.append("\nUser-Agent: ").append(headers.get("User-Agent"));
+                }
+                if (headers.containsKey("Content-Type")) {
+                    sb.append("\nContent-Type: ").append(headers.get("Content-Type"));
+                }
+            } else {
+                if (attributes.containsKey("preview")) {
+                    sb.append("Preview: ").append(attributes.get("preview"));
+                }
+            }
+            return sb.toString();
+        }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();

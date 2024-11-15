@@ -12,6 +12,8 @@ public class RequestLog {
     private String userId;
     private ByteBuf data;
     private String requestInfo;
+    private String protocol;
+    private long packetSize;
 
     public void setIp(String ip) {
         this.ip = ip;
@@ -59,5 +61,21 @@ public class RequestLog {
 
     public void setData(ByteBuf data) {
         this.data = data;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
+    }
+
+    public long getPacketSize() {
+        return packetSize;
+    }
+
+    public void setPacketSize(long packetSize) {
+        this.packetSize = packetSize;
     }
 }

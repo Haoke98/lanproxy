@@ -25,6 +25,10 @@
                 {field: 'time', title: '时间', width: '10%'}
                 ,{field: 'ip', title: 'IP地址', width: '10%'}
                 ,{field: 'port', title: '端口', width: '6%'}
+                ,{field: 'protocol', title: '协议', width: '8%'}
+                ,{field: 'packetSize', title: '包大小', width: '8%', templet: function(d){
+                    return d.packetSize + ' bytes';
+                }}
                 ,{field: 'requestInfo', title: '请求信息'}
             ]]
             ,response: {

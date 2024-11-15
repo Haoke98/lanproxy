@@ -40,12 +40,13 @@ public class RequestLogHandler {
             while (true) {
                 try {
                     RequestLog log = logQueue.take();
-                    // 使用新的包解析器解析请求
                     PacketParser.PacketInfo packetInfo = PacketParser.parsePacket(log.getData());
-                    log.setRequestInfo(packetInfo.toString());
-                    // 写入日志
-                    logger.info("Request from {}:{} - {}", log.getIp(), log.getPort(), packetInfo.getProtocol());
-                    // 修改日志处理逻辑，保存最近的日志
+                    log.setRequestInfo(packetInfo.getDetailedInfo());
+                    log.setProtocol(packetInfo.getProtocol());
+                    log.setPacketSize(log.getData().readableBytes());
+                    
+                    logger.info("Request from {}:{} - {} ({} bytes)", 
+                        log.getIp(), log.getPort(), packetInfo.getProtocol(), log.getPacketSize());
                     saveLog(log);
                 } catch (Exception e) {
                     logger.error("Error processing log", e);
