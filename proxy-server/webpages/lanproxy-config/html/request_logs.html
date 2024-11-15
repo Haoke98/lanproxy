@@ -1,6 +1,9 @@
 <div class="layui-tab layui-tab-brief">
     <ul class="layui-tab-title site-demo-title">
         <li class="layui-this">请求日志</li>
+        <li class="operation-bar" style="float: right; margin-right: 15px;">
+            <button class="layui-btn layui-btn-normal" id="refreshBtn">刷新</button>
+        </li>
     </ul>
     <div class="main-content">
         <table id="logTable" lay-filter="logTable"></table>
@@ -57,12 +60,12 @@
             });
         });
 
-        // 定时刷新
-        setInterval(function(){
+        // 删除原有的定时刷新代码，替换为按钮点击事件
+        $('#refreshBtn').on('click', function(){
             table.reload('logTable', {
                 scrollPos: true
             });
-        }, 10000);
+        });
 
         // 监听表格工具条
         table.on('tool(logTable)', function(obj){
@@ -148,5 +151,14 @@
 }
 .log-hex .content {
     letter-spacing: 1px;
+}
+.layui-tab-title li.operation-bar {
+    padding: 0;
+    line-height: normal;
+    min-width: auto;
+    border-bottom: none;
+}
+.layui-tab-title li.operation-bar:after {
+    display: none;
 }
 </style>
