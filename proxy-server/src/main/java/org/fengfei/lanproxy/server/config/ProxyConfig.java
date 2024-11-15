@@ -409,4 +409,32 @@ public class ProxyConfig implements Serializable {
 
         void onChanged();
     }
+
+    // 添加本地代理配置
+    private static final String LOCAL_CLIENT_KEY = "local_proxy_client";
+    private static final String LOCAL_CLIENT_NAME = "本地代理";
+
+    public void addLocalProxyMapping() {
+        // 检查是否已存在本地代理客户端
+        Client localClient = null;
+        for (Client client : clients) {
+            if (LOCAL_CLIENT_KEY.equals(client.getClientKey())) {
+                localClient = client;
+                break;
+            }
+        }
+
+        // 如果不存在则创建
+        if (localClient == null) {
+            localClient = new Client();
+            localClient.setClientKey(LOCAL_CLIENT_KEY);
+            localClient.setName(LOCAL_CLIENT_NAME);
+            localClient.setStatus(1);// online
+            localClient.setProxyMappings(new ArrayList<>());
+            clients.add(localClient);
+        }
+
+        // 更新配置
+        update(JsonUtil.object2json(clients));
+    }
 }

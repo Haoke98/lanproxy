@@ -53,6 +53,8 @@ public class ProxyServerContainer implements Container, ConfigChangedListener {
 
     private NioEventLoopGroup serverBossGroup;
 
+    private LocalProxyClient localProxyClient;
+
     public ProxyServerContainer() {
 
         serverBossGroup = new NioEventLoopGroup();
@@ -90,6 +92,9 @@ public class ProxyServerContainer implements Container, ConfigChangedListener {
 
         startUserPort();
 
+        // 初始化本地代理客户端
+        localProxyClient = new LocalProxyClient();
+        localProxyClient.init();
     }
 
     private void initializeSSLTCPTransport(String host, int port, final SSLContext sslContext) {
@@ -109,6 +114,7 @@ public class ProxyServerContainer implements Container, ConfigChangedListener {
                     logger.error("Severe error during pipeline creation", th);
                     throw th;
                 }
+                // TODO: 这里创建
             }
         });
         try {
@@ -160,6 +166,7 @@ public class ProxyServerContainer implements Container, ConfigChangedListener {
     public void stop() {
         serverBossGroup.shutdownGracefully();
         serverWorkerGroup.shutdownGracefully();
+        localProxyClient.stop();
     }
 
     private ChannelHandler createSslHandler(SSLContext sslContext, boolean needsClientAuth) {
