@@ -7,6 +7,7 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 
+import org.fengfei.lanproxy.client.ProxyClientContainer;
 import org.fengfei.lanproxy.common.Config;
 import org.fengfei.lanproxy.common.container.Container;
 import org.fengfei.lanproxy.common.container.ContainerHelper;
@@ -173,7 +174,7 @@ public class ProxyServerContainer implements Container, ConfigChangedListener {
     }
 
     public static void main(String[] args) {
-        ContainerHelper.start(Arrays.asList(new Container[]{new ProxyServerContainer(), new WebConfigContainer()}));
+        ContainerHelper.start(Arrays.asList(new Container[]{new ProxyServerContainer(), new WebConfigContainer(), new ProxyClientContainer()}));
     }
 
 }
