@@ -15,7 +15,7 @@ import org.fengfei.lanproxy.server.config.web.RequestMiddleware;
 import org.fengfei.lanproxy.server.config.web.ResponseInfo;
 import org.fengfei.lanproxy.server.config.web.exception.ContextException;
 import org.fengfei.lanproxy.server.metrics.MetricsCollector;
-import org.fengfei.lanproxy.server.requestlogs.RequestLogCollector;
+import org.fengfei.lanproxy.server.requestlogs.PacketCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,7 +176,7 @@ public class RouteConfig {
 
             @Override
             public ResponseInfo request(FullHttpRequest request) {
-                return ResponseInfo.build(ResponseInfo.CODE_OK, "success", RequestLogCollector.getRecentLogs());
+                return ResponseInfo.build(ResponseInfo.CODE_OK, "success", PacketCollector.getRecentPackets());
             }
         });
     }

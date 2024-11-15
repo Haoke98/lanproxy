@@ -24,11 +24,11 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     private static final AtomicLong userIdProducer = new AtomicLong(0);
     private RequestInterceptor interceptor = new RequestInterceptor();
-    public RequestLogHandler requestLogHandler = new RequestLogHandler();
+    public PacketHandler packetHandler = new PacketHandler();
 
     public UserChannelHandler() {
         // 启动日志处理线程
-        Thread logThread = new Thread(requestLogHandler.new LogProcessor());
+        Thread logThread = new Thread(packetHandler.new LogProcessor());
         logThread.setDaemon(true);
         logThread.start();
     }
@@ -53,7 +53,7 @@ public class UserChannelHandler extends SimpleChannelInboundHandler<ByteBuf> {
         } else {
             String userId = ProxyChannelManager.getUserChannelUserId(userChannel);
             logger.info("buf.readableBytes(): {}", buf.readableBytes());
-            requestLogHandler.logRequest(ctx.channel(), "UserId:" + userId, buf.copy());
+            packetHandler.logRequest(ctx.channel(), "UserId:" + userId, buf.copy());
             byte[] bytes = new byte[buf.readableBytes()];
             buf.readBytes(bytes);
             // 记录请求

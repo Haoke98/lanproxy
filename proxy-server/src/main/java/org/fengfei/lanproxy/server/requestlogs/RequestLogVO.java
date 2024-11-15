@@ -15,14 +15,14 @@ public class RequestLogVO {
     private String hexContent;
     private String asciiContent;
 
-    public RequestLogVO(RequestLog log) {
-        this.ip = log.getIp();
-        this.port = log.getPort();
-        this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(log.getTime());
-        this.requestInfo = log.getRequestInfo();
-        this.protocol = log.getProtocol();
-        this.packetSize = log.getPacketSize();
-        ByteBuf buf = log.getData();
+    public RequestLogVO(TcpPacket pkt) {
+        this.ip = pkt.getSourceIp();
+        this.port = pkt.getSourcePort();
+        this.time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pkt.getTime());
+        this.requestInfo = pkt.getRequestInfo();
+        this.protocol = pkt.getProtocol();
+        this.packetSize = pkt.getPacketSize();
+        ByteBuf buf = pkt.getData();
         byte[] bytes = new byte[buf.readableBytes()];
         buf.getBytes(buf.readerIndex(), bytes);
         this.setPacketData(bytes);

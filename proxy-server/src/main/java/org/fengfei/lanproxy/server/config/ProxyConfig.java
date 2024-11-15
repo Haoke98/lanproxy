@@ -99,7 +99,7 @@ public class ProxyConfig implements Serializable {
                 "config init serverBind {}, serverPort {}, configServerBind {}, configServerPort {}, configAdminUsername {}, configAdminPassword {}",
                 serverBind, serverPort, configServerBind, configServerPort, configAdminUsername, configAdminPassword);
 
-        update("[{\"name\":\"本地代理\",\"clientKey\":\"7815c64fbd02420c84c347704a8967b5\",\"proxyMappings\":[{\"inetPort\":9000,\"lan\":\"127.0.0.1:8000\",\"name\":\"测试转发1\"},{\"inetPort\":9001,\"lan\":\"127.0.0.1:8000\",\"name\":\"测试2\"},{\"inetPort\":9002,\"lan\":\"127.0.0.1:8000\",\"name\":\"测试3\"},{\"inetPort\":9003,\"lan\":\"127.0.0.1:8000\",\"name\":\"测试4\"}],\"status\":0}]");
+        update(null);
     }
 
     public Integer getServerPort() {

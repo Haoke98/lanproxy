@@ -17,6 +17,8 @@ public class PacketParser {
         private Map<String, String> headers = new HashMap<>();
         private String rawData;
         private Map<String, Object> attributes = new HashMap<>();
+        private long sequenceNumber;
+        private long acknowledgmentNumber;
 
         // Getters and setters
         public String getProtocol() {
@@ -82,6 +84,22 @@ public class PacketParser {
             return sb.toString();
         }
 
+        public long getSequenceNumber() {
+            return sequenceNumber;
+        }
+
+        public void setSequenceNumber(long sequenceNumber) {
+            this.sequenceNumber = sequenceNumber;
+        }
+
+        public long getAcknowledgmentNumber() {
+            return acknowledgmentNumber;
+        }
+
+        public void setAcknowledgmentNumber(long acknowledgmentNumber) {
+            this.acknowledgmentNumber = acknowledgmentNumber;
+        }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -130,6 +148,15 @@ public class PacketParser {
         if (buf == null || buf.readableBytes() == 0) {
             info.setProtocol("UNKNOWN");
             return info;
+        }
+
+        // 解析TCP头部（如果存在）
+        if (buf.readableBytes() >= 20) { // 最小TCP头部大小
+            int tcpHeaderOffset = findTcpHeaderOffset(buf);
+            if (tcpHeaderOffset >= 0) {
+                info.setSequenceNumber(buf.getUnsignedInt(tcpHeaderOffset + 4));
+                info.setAcknowledgmentNumber(buf.getUnsignedInt(tcpHeaderOffset + 8));
+            }
         }
 
         // 检测协议
@@ -320,5 +347,11 @@ public class PacketParser {
 
     private static boolean isPrintable(byte b) {
         return b >= 32 && b < 127;
+    }
+
+    private static int findTcpHeaderOffset(ByteBuf buf) {
+        // 实际项目中需要根据具体的数据包格式来确定TCP头部的位置
+        // 这里简化处理，假设TCP头部在固定位置
+        return 0;
     }
 } 
