@@ -1,7 +1,5 @@
 package org.fengfei.lanproxy.server.requestlogs;
 
-import org.fengfei.lanproxy.server.handlers.RequestLogHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +9,11 @@ public class RequestLogCollector {
     private static final int MAX_LOG_SIZE = 1000;
 
     // 添加获取日志的方法
-    public static List<RequestLogHandler.RequestLogVO> getRecentLogs() {
-        List<RequestLogHandler.RequestLogVO> logs = new ArrayList<>();
+    public static List<RequestLogVO> getRecentLogs() {
+        List<RequestLogVO> logs = new ArrayList<>();
         synchronized (recentLogs) {
             for (RequestLog log : recentLogs) {
-                logs.add(new RequestLogHandler.RequestLogVO(log));
+                logs.add(new RequestLogVO(log));
             }
         }
         return logs;

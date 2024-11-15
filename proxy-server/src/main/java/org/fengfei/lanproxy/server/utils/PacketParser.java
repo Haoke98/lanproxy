@@ -259,7 +259,7 @@ public class PacketParser {
     }
 
     // 其他辅助方法...
-    private static boolean isHttpRequest(ByteBuf buf) {
+    static boolean isHttpRequest(ByteBuf buf) {
         if (buf.readableBytes() < 4) return false;
         byte[] firstBytes = new byte[4];
         buf.getBytes(buf.readerIndex(), firstBytes);
